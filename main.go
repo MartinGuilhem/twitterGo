@@ -9,6 +9,7 @@ import (
 	"strings"
 	"twitterGo/awsgo"
 	"twitterGo/db"
+	"twitterGo/handlers"
 	"twitterGo/models"
 	"twitterGo/secretmanager"
 )
@@ -71,7 +72,19 @@ func LambdaExecute(ctx context.Context, request events.APIGatewayProxyRequest) (
 		return res, nil
 	}
 
-	return res, nil
+	respAPI := handlers.Handlers(awsgo.Ctx, request)
+	if respAPI.CustomResp == nil {
+		res = &events.APIGatewayProxyResponse{
+			StatusCode: respAPI.Status,
+			Body:       respAPI.Message,
+			Headers: map[string]string{
+				"Content-Type": "application/json",
+			},
+		}
+		return res, nil
+	}
+
+	return respAPI.CustomResp, nil
 }
 
 func ParamValidator() bool {
