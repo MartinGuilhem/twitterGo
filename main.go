@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	"twitterGo/awsgo"
+	"twitterGo/db"
 	"twitterGo/models"
 	"twitterGo/secretmanager"
 )
@@ -56,6 +57,19 @@ func LambdaExecute(ctx context.Context, request events.APIGatewayProxyRequest) (
 	awsgo.Ctx = context.WithValue(awsgo.Ctx, models.Key("jwtSign"), SecretModel.JWTSign)
 	awsgo.Ctx = context.WithValue(awsgo.Ctx, models.Key("body"), request.Body)
 	awsgo.Ctx = context.WithValue(awsgo.Ctx, models.Key("bucketName"), os.Getenv("BucketName"))
+
+	// Connect DB or Check connection
+	err = db.ConnectDB(awsgo.Ctx)
+	if err != nil {
+		res = &events.APIGatewayProxyResponse{
+			StatusCode: 500,
+			Headers: map[string]string{
+				"Content-Type": "application/json",
+			},
+			Body: "Error while connecting DB " + err.Error(),
+		}
+		return res, nil
+	}
 
 	return res, nil
 }
