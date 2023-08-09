@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"twitterGo/jwt"
 	"twitterGo/models"
+	"twitterGo/routers"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -16,7 +17,7 @@ func Handlers(ctx context.Context, request events.APIGatewayProxyRequest) models
 
 	r.Status = 400
 
-	isOk, statusCode, msg, claim := validateAuthorization(ctx, request)
+	isOk, statusCode, msg, _ := validateAuthorization(ctx, request)
 	if !isOk {
 		r.Status = statusCode
 		r.Message = msg
@@ -28,7 +29,7 @@ func Handlers(ctx context.Context, request events.APIGatewayProxyRequest) models
 	case "POST":
 		switch ctx.Value(models.Key("path")).(string) {
 		case "register":
-			return routers.Registro(ctx)
+			return routers.Register(ctx)
 		}
 	case "GET":
 		switch ctx.Value(models.Key("path")).(string) {
