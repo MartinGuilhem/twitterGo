@@ -7,6 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.20.1
 	github.com/aws/aws-sdk-go-v2/config v1.18.33
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.20.2
+	github.com/golang-jwt/jwt/v4 v4.5.0
 	go.mongodb.org/mongo-driver v1.12.1
 )
 
