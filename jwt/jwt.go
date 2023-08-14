@@ -2,7 +2,7 @@ package jwt
 
 import (
 	"context"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"time"
 	"twitterGo/models"
 )
