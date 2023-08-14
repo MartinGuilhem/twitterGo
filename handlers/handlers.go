@@ -35,7 +35,8 @@ func Handlers(ctx context.Context, request events.APIGatewayProxyRequest) models
 		}
 	case "GET":
 		switch ctx.Value(models.Key("path")).(string) {
-
+		case "profile":
+			return routers.GetProfile(request)
 		}
 	case "PUT":
 		switch ctx.Value(models.Key("path")).(string) {
@@ -53,6 +54,8 @@ func Handlers(ctx context.Context, request events.APIGatewayProxyRequest) models
 }
 
 func validateAuthorization(ctx context.Context, request events.APIGatewayProxyRequest) (bool, int, string, models.Claim) {
+	fmt.Println("Processing validateAuthorization ")
+
 	path := ctx.Value(models.Key("path")).(string)
 	if path == "register" || path == "login" || path == "getAvatar" || path == "getBanner" {
 		return true, 200, "", models.Claim{}
@@ -64,6 +67,10 @@ func validateAuthorization(ctx context.Context, request events.APIGatewayProxyRe
 	}
 
 	claim, allOK, msg, err := jwt.ProcessToken(token, ctx.Value(models.Key("jwtSign")).(string))
+	if err != nil {
+		fmt.Println("Error ProcessToken " + err.Error())
+	}
+
 	if !allOK {
 		fmt.Println("Error in token " + err.Error())
 		return false, 401, msg, models.Claim{}
