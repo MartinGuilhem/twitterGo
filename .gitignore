@@ -1,6 +1,7 @@
 #Compilation
 subo.sh
+
 main
 main.exe
 main.zip
-
+go.sum
